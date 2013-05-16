@@ -13,5 +13,6 @@ extern UIImage* RSOpacityBackgroundImage(CGFloat length, UIColor *color);
 @interface RSOpacitySlider : UISlider
 
 @property (nonatomic) RSColorPickerView *colorPicker;
+@property (nonatomic, assign) CGFloat cornerRadius;
 
 @end

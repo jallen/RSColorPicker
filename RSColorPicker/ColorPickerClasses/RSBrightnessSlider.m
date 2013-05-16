@@ -163,7 +163,9 @@ UIImage* RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
     self.minimumValue = 0.0;
     self.maximumValue = 1.0;
     self.continuous = YES;
-    
+	self.backgroundColor = [UIColor clearColor];
+	_cornerRadius = 0.f;
+  
     self.enabled = YES;
     self.userInteractionEnabled = YES;
     
@@ -188,11 +190,17 @@ UIImage* RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
 					   (id)[UIColor colorWithWhite:0 alpha:1].CGColor,
 					   (id)[UIColor colorWithWhite:1 alpha:1].CGColor,nil];
 	
+	UIBezierPath* roundedRectPath = [UIBezierPath bezierPathWithRoundedRect: rect cornerRadius: _cornerRadius];
+	CGContextAddPath(ctx, roundedRectPath.CGPath);
+	CGContextClip(ctx);
+	
 	CGGradientRef myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);
 	
 	CGContextDrawLinearGradient(ctx, myGradient, CGPointZero, CGPointMake(rect.size.width, 0), 0);
 	CGGradientRelease(myGradient);
 	CGColorSpaceRelease(space);
+	
+	
 }
 
 -(void)setColorPicker:(RSColorPickerView*)cp {

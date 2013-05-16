@@ -15,5 +15,6 @@ extern CGContextRef RSBitmapContextCreateDefault(CGSize size);
 @interface RSBrightnessSlider : UISlider
 
 @property (nonatomic) RSColorPickerView *colorPicker;
+@property (nonatomic, assign) CGFloat cornerRadius; // Defaults to 0.f
 
 @end
