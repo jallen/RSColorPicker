@@ -79,9 +79,9 @@ UIImage* RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
 	NSArray* colors = [[NSArray alloc] initWithObjects:
-										 (id)[UIColor colorWithWhite:0 alpha:0].CGColor,
+										 (id)[UIColor colorWithWhite:1 alpha:0].CGColor,
 										 (id)[UIColor colorWithWhite:1 alpha:1].CGColor,nil];
-	
+	CGFloat gradientLocations[] = {0, 0.7, 0.9};
 	UIBezierPath* roundedRectPath = [UIBezierPath bezierPathWithRoundedRect: rect cornerRadius: _cornerRadius];
 	CGContextAddPath(ctx, roundedRectPath.CGPath); 
 	CGContextClip(ctx);
@@ -104,7 +104,7 @@ UIImage* RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
 		}
 	}
 	
-	CGGradientRef myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);
+	CGGradientRef myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, gradientLocations);
 	
 	CGContextDrawLinearGradient(ctx, myGradient, CGPointZero, CGPointMake(rect.size.width, 0), 0);
 	CGGradientRelease(myGradient);
