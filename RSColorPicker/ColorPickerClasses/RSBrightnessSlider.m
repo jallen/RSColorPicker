@@ -186,9 +186,8 @@ UIImage* RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
 {
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
-	NSArray* colors = [[NSArray alloc] initWithObjects:
-					   (id)[UIColor colorWithWhite:0 alpha:1].CGColor,
-					   (id)[UIColor colorWithWhite:1 alpha:1].CGColor,nil];
+	NSArray* colors = @[(id)[UIColor colorWithWhite:0 alpha:1].CGColor,
+					    (id)[UIColor colorWithWhite:1 alpha:1].CGColor];
 	
 	UIBezierPath* roundedRectPath = [UIBezierPath bezierPathWithRoundedRect: rect cornerRadius: _cornerRadius];
 	CGContextAddPath(ctx, roundedRectPath.CGPath);
