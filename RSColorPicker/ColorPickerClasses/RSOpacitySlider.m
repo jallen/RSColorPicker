@@ -55,12 +55,12 @@ UIImage* RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
 	self.minimumValue = 0.0;
 	self.maximumValue = 1.0;
 	self.continuous = YES;
+	_cornerRadius = 0.f;
 	
 	self.enabled = YES;
 	self.userInteractionEnabled = YES;
-	
-	UIImage *backgroundImage = RSOpacityBackgroundImage(16.f, [UIColor colorWithWhite:0.5 alpha:1.0]);
-	self.backgroundColor = [UIColor colorWithPatternImage:backgroundImage];
+	self.backgroundColor = [UIColor clearColor];
+		
 	[self addTarget:self action:@selector(myValueChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
@@ -79,10 +79,32 @@ UIImage* RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
 	NSArray* colors = [[NSArray alloc] initWithObjects:
-										 (id)[UIColor colorWithWhite:0 alpha:0].CGColor,
+										 (id)[UIColor colorWithWhite:1 alpha:0].CGColor,
 										 (id)[UIColor colorWithWhite:1 alpha:1].CGColor,nil];
+	CGFloat gradientLocations[] = {0, 0.7, 0.9};
+	UIBezierPath* roundedRectPath = [UIBezierPath bezierPathWithRoundedRect: rect cornerRadius: _cornerRadius];
+	CGContextAddPath(ctx, roundedRectPath.CGPath); 
+	CGContextClip(ctx);
 	
-	CGGradientRef myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);
+	//Draw Opacity Background
+	CGFloat w = 5.f;
+	int cols = ceil(rect.size.height/w);
+	int rows = ceil(rect.size.width/w);
+	int i,j;
+	UIColor *color1;
+	UIColor *color2;
+	for (j=0; j<cols; j++){
+		color1 = (j % 2) ? [UIColor whiteColor] : [UIColor grayColor];
+		color2 = (j % 2) ? [UIColor grayColor] : [UIColor whiteColor];
+		for (i=0; i<rows; i++){
+			CGRect pixelRect = CGRectMake(w*i, w*j, w, w);
+			UIColor* pixelColor = (i % 2) ? color1 : color2;
+			CGContextSetFillColorWithColor(ctx, pixelColor.CGColor);
+			CGContextFillRect(ctx, pixelRect);
+		}
+	}
+	
+	CGGradientRef myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, gradientLocations);
 	
 	CGContextDrawLinearGradient(ctx, myGradient, CGPointZero, CGPointMake(rect.size.width, 0), 0);
 	CGGradientRelease(myGradient);
