@@ -307,7 +307,8 @@
     CGFloat r = sqrt(pow(X, 2) + pow(Y, 2));
     
     // alpha is the angle in radian of the touch on the unit circle
-    CGFloat alpha = acos( X / r );
+    CGFloat alpha = (r != 0) ? acos( X / r ) : 0;
+
     if (touchPoint.y > CGRectGetMidX(_gradientContainer.frame)) alpha = 2 * M_PI - alpha;
     
     // 'actual radius' is the distance between the center and the border of the gradient
@@ -329,6 +330,7 @@
     // we offset the center of the circle, to get the coordinate from the right top left origin
     returnedPoint.x = returnedPoint.x + CGRectGetMidX(_gradientContainer.frame);
     returnedPoint.y = CGRectGetMidY(_gradientContainer.frame) - returnedPoint.y;
+    
 	return returnedPoint;
 }
 
