@@ -48,11 +48,13 @@
     // View that controls brightness
 	_brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 300.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
 	[_brightnessSlider setColorPicker:_colorPicker];
+    [_brightnessSlider setCornerRadius:8.f];
 	[self.view addSubview:_brightnessSlider];
     
     // View that controls opacity
     _opacitySlider = [[RSOpacitySlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 340.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
     [_opacitySlider setColorPicker:_colorPicker];
+    [_opacitySlider setCornerRadius:8.f];
     [self.view addSubview:_opacitySlider];
 
 
