@@ -353,30 +353,6 @@
 #pragma mark - Touch Events -
 
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint {
-<<<<<<< HEAD
-	if ([_activeAreaShape containsPoint:touchPoint]) {
-		return touchPoint;
-	}
-    // We compute the right point on the gradient border
-	CGPoint returnedPoint;
-    
-    // TouchCircle is the circle which pass by the point 'touchPoint', of radius 'r'
-    // 'X' is the x coordinate of the touch in TouchCircle
-    CGFloat X = touchPoint.x - CGRectGetMidX(_gradientContainer.frame);
-    // 'Y' is the y coordinate of the touch in TouchCircle
-    CGFloat Y = touchPoint.y - CGRectGetMidY(_gradientContainer.frame);
-    CGFloat r = sqrt(pow(X, 2) + pow(Y, 2));
-    
-    // alpha is the angle in radian of the touch on the unit circle
-    CGFloat alpha = (r != 0) ? acos( X / r ) : 0;
-
-    if (touchPoint.y > CGRectGetMidX(_gradientContainer.frame)) alpha = 2 * M_PI - alpha;
-    
-    // 'actual radius' is the distance between the center and the border of the gradient
-    CGFloat actualRadius;
-    if (_cropToCircle) {
-        actualRadius = _gradientShape.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0;
-=======
     if ([self.activeAreaShape containsPoint:touchPoint]) {
         return touchPoint;
     }
@@ -406,7 +382,6 @@
         returnedPoint.x = returnedPoint.x + CGRectGetMidX(self.bounds);
         returnedPoint.y = CGRectGetMidY(self.bounds) - returnedPoint.y;
         return returnedPoint;
->>>>>>> 66cf8779fa96edddce47efaaebf109a51ac92271
     } else {
         CGPoint point = touchPoint;
         if (point.x < self.paddingDistance) point.x = self.paddingDistance;
@@ -419,17 +394,6 @@
         }
         return point;
     }
-<<<<<<< HEAD
-    
-    returnedPoint.x = fabs(actualRadius) * cos(alpha);
-    returnedPoint.y = fabs(actualRadius) * sin(alpha);
-    
-    // we offset the center of the circle, to get the coordinate from the right top left origin
-    returnedPoint.x = returnedPoint.x + CGRectGetMidX(_gradientContainer.frame);
-    returnedPoint.y = CGRectGetMidY(_gradientContainer.frame) - returnedPoint.y;
-    
-	return returnedPoint;
-=======
 }
 
 - (RSColorPickerState *)stateForPoint:(CGPoint)point {
@@ -438,7 +402,6 @@
                                                               padding:self.paddingDistance];
     newState = [[newState stateBySettingAlpha:self.opacity] stateBySettingBrightness:self.brightness];
     return newState;
->>>>>>> 66cf8779fa96edddce47efaaebf109a51ac92271
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

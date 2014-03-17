@@ -7,114 +7,70 @@
 //
 
 #import "RSOpacitySlider.h"
+#import "RSColorFunctions.h"
 
-/**
- * Returns image that looks like a checkered background.
- */
-UIImage* RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
-	UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(0, 0, length*0.5, length*0.5)];
-	UIBezierPath* rectangle2Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, length*0.5, length*0.5, length*0.5)];
-	UIBezierPath* rectangle3Path = [UIBezierPath bezierPathWithRect: CGRectMake(0, length*0.5, length*0.5, length*0.5)];
-	UIBezierPath* rectangle4Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, 0, length*0.5, length*0.5)];
-	
-	UIGraphicsBeginImageContext(CGSizeMake(length, length));
-	
-	[color setFill];
-	[rectanglePath fill];
-	[rectangle2Path fill];
-	
-	[[UIColor whiteColor] setFill];
-	[rectangle3Path fill];
-	[rectangle4Path fill];
-	
-	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-	UIGraphicsEndImageContext();
-	
-	return image;
-}
+@interface RSOpacitySlider()
+
+@property (nonatomic, strong) UIView *backgroundView;
+
+@end
 
 @implementation RSOpacitySlider
 
--(id)initWithFrame:(CGRect)frame {
-	self = [super initWithFrame:frame];
-	if (self) {
-		[self initRoutine];
-	}
-	return self;
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self initRoutine];
+    }
+    return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
-	self = [super initWithCoder:aDecoder];
-	if (self) {
-		[self initRoutine];
-	}
-	return self;
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initRoutine];
+    }
+    return self;
 }
 
--(void)initRoutine {
-	self.minimumValue = 0.0;
-	self.maximumValue = 1.0;
-	self.continuous = YES;
-	_cornerRadius = 0.f;
-	
-	self.enabled = YES;
-	self.userInteractionEnabled = YES;
-	self.backgroundColor = [UIColor clearColor];
-		
-	[self addTarget:self action:@selector(myValueChanged:) forControlEvents:UIControlEventValueChanged];
+- (void)initRoutine {
+    self.minimumValue = 0.0;
+    self.maximumValue = 1.0;
+    self.continuous = YES;
+    
+    self.enabled = YES;
+    self.userInteractionEnabled = YES;
+    self.backgroundColor = [UIColor clearColor];
+    
+    [self setMinimumTrackImage:[UIImage alloc] forState:UIControlStateNormal];
+    [self setMaximumTrackImage:[UIImage alloc] forState:UIControlStateNormal];
+    
+    self.backgroundView = [[UIView alloc] initWithFrame:self.bounds];
+    self.backgroundView.userInteractionEnabled = NO;
+    [self addSubview:self.backgroundView];
+    
+    UIImage *backgroundImage = RSOpacityBackgroundImage(16.f, [UIScreen mainScreen].scale, [UIColor colorWithWhite:0.5 alpha:1.0]);
+    self.backgroundView.backgroundColor = [UIColor colorWithPatternImage:backgroundImage];
+    
+    UIImage *overlayImage = RSOverlayImage(self.bounds.size, [UIScreen mainScreen].scale, [UIColor clearColor], [UIColor whiteColor]);
+    [self.backgroundView addSubview:[[UIImageView alloc] initWithImage:overlayImage]];
+
+    [self addTarget:self action:@selector(myValueChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
-- (CGRect)trackRectForBounds:(CGRect)bounds
-{
-	//to hide the track view
-	return CGRectMake(0, ceilf(bounds.size.height / 2), bounds.size.width, 0);
+- (void)myValueChanged:(id)notif {
+    self.colorPicker.opacity = self.value;
 }
 
--(void)myValueChanged:(id)notif {
-	_colorPicker.opacity = self.value;
+- (void)setColorPicker:(RSColorPickerView *)cp {
+    _colorPicker = cp;
+    if (!_colorPicker) { return; }
+    self.value = self.colorPicker.opacity;
 }
 
-- (void)drawRect:(CGRect)rect
-{
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
-	NSArray* colors = [[NSArray alloc] initWithObjects:
-										 (id)[UIColor colorWithWhite:1 alpha:0].CGColor,
-										 (id)[UIColor colorWithWhite:1 alpha:1].CGColor,nil];
-	CGFloat gradientLocations[] = {0, 0.7, 0.9};
-	UIBezierPath* roundedRectPath = [UIBezierPath bezierPathWithRoundedRect: rect cornerRadius: _cornerRadius];
-	CGContextAddPath(ctx, roundedRectPath.CGPath); 
-	CGContextClip(ctx);
-	
-	//Draw Opacity Background
-	CGFloat w = 5.f;
-	int cols = ceil(rect.size.height/w);
-	int rows = ceil(rect.size.width/w);
-	int i,j;
-	UIColor *color1;
-	UIColor *color2;
-	for (j=0; j<cols; j++){
-		color1 = (j % 2) ? [UIColor whiteColor] : [UIColor grayColor];
-		color2 = (j % 2) ? [UIColor grayColor] : [UIColor whiteColor];
-		for (i=0; i<rows; i++){
-			CGRect pixelRect = CGRectMake(w*i, w*j, w, w);
-			UIColor* pixelColor = (i % 2) ? color1 : color2;
-			CGContextSetFillColorWithColor(ctx, pixelColor.CGColor);
-			CGContextFillRect(ctx, pixelRect);
-		}
-	}
-	
-	CGGradientRef myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, gradientLocations);
-	
-	CGContextDrawLinearGradient(ctx, myGradient, CGPointZero, CGPointMake(rect.size.width, 0), 0);
-	CGGradientRelease(myGradient);
-	CGColorSpaceRelease(space);
-}
-
--(void)setColorPicker:(RSColorPickerView*)cp {
-	_colorPicker = cp;
-	if (!_colorPicker) { return; }
-	self.value = [_colorPicker brightness];
+- (void)setCornerRadius:(CGFloat)radius {
+    self.backgroundView.layer.cornerRadius = radius;
+    self.backgroundView.layer.masksToBounds = YES;
 }
 
 @end

@@ -12,6 +12,6 @@
 @interface RSOpacitySlider : UISlider
 
 @property (nonatomic) RSColorPickerView *colorPicker;
-@property (nonatomic, assign) CGFloat cornerRadius;
+@property (nonatomic) CGFloat cornerRadius;
 
 @end

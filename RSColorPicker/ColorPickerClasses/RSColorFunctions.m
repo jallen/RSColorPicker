@@ -116,6 +116,31 @@ UIImage * RSOpacityBackgroundImage(CGFloat length, CGFloat scale, UIColor *color
     return RSUIImageWithScale(image, scale);
 }
 
+UIImage * RSOverlayImage(CGSize size, CGFloat scale, UIColor *leftColor, UIColor *rightColor) {
+    assert(size.width > 0);
+    assert(size.height > 0);
+    assert(scale > 0);
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, scale);
+    
+    
+    CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
+    NSArray *colors = [[NSArray alloc] initWithObjects:
+                       (id)leftColor.CGColor,
+                       (id)rightColor.CGColor,nil];
+    
+    CGGradientRef gradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);
+    
+    CGContextDrawLinearGradient(UIGraphicsGetCurrentContext(), gradient, CGPointZero, CGPointMake(size.width, 0), 0);
+    CGGradientRelease(gradient);
+    CGColorSpaceRelease(space);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return RSUIImageWithScale(image, scale);
+}
+
 UIColor * RSRandomColorOpaque(BOOL isOpaque) {
     /*
      From https://gist.github.com/kylefox/1689973

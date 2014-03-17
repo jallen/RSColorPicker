@@ -11,6 +11,6 @@
 @interface RSBrightnessSlider : UISlider
 
 @property (nonatomic) RSColorPickerView *colorPicker;
-@property (nonatomic, assign) CGFloat cornerRadius; // Defaults to 0.f
+@property (nonatomic) CGFloat cornerRadius;
 
 @end

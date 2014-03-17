@@ -18,4 +18,6 @@ UIImage * RSUIImageWithScale(UIImage *img, CGFloat scale);
 
 UIImage * RSOpacityBackgroundImage(CGFloat length, CGFloat scale, UIColor *color);
 
+UIImage * RSOverlayImage(CGSize size, CGFloat scale, UIColor *leftColor, UIColor *rightColor);
+
 UIColor * RSRandomColorOpaque(BOOL isOpaque);
