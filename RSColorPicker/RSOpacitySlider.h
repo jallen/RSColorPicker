@@ -6,9 +6,8 @@
 //  Copyright (c) 2013 Red Cactus LLC. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import "RSColorPickerView.h"
-
-extern UIImage* RSOpacityBackgroundImage(CGFloat length, UIColor *color);
 
 @interface RSOpacitySlider : UISlider
 

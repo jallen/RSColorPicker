@@ -3,7 +3,6 @@
 //  RSColorPicker
 //
 //  Created by Ryan Sullivan on 3/12/13.
-//  Copyright (c) 2013 Freelance Web Developer. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -12,8 +11,11 @@
 BMPixel RSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V);
 void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v);
 
-void RSGetComponentsForColor(float components[3], UIColor *color);
+// four floats will be placed into `components`
+void RSGetComponentsForColor(CGFloat *components, UIColor *color);
 
-CGSize RSCGSizeWithScale(CGSize size, CGFloat scale);
-CGPoint RSCGPointWithScale(CGPoint point, CGFloat scale);
-UIImage* RSUIImageWithScale(UIImage *img, CGFloat scale);
+UIImage * RSUIImageWithScale(UIImage *img, CGFloat scale);
+
+UIImage * RSOpacityBackgroundImage(CGFloat length, CGFloat scale, UIColor *color);
+
+UIColor * RSRandomColorOpaque(BOOL isOpaque);
